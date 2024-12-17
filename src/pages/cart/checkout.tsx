@@ -6,8 +6,30 @@ import CheckoutStatus from "@/components/checkout-status";
 import type { RootState } from "@/store";
 
 import Layout from "../../layouts/Main";
+import { z } from "zod";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const SignUpSchema = z.object({
+  email: z.string().email(),
+  phoneNumber: z.string().max(12),
+  postal: z.number(),
+  city: z.string(),
+  firstName: z.string(),
+  lastName: z.string(),
+  address: z.string(),
+});
+type SignUpSchemaType = z.infer<typeof SignUpSchema>;
 
 const CheckoutPage = () => {
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<SignUpSchemaType>({ resolver: zodResolver(SignUpSchema) });
+
+
   const priceTotal = useSelector((state: RootState) => {
     const { cartItems } = state.cart;
     let totalPrice = 0;
@@ -17,6 +39,8 @@ const CheckoutPage = () => {
 
     return totalPrice;
   });
+
+  const onSubmit: SubmitHandler<SignUpSchemaType> = (data) => console.log(data);
 
   return (
     <Layout>
@@ -38,14 +62,16 @@ const CheckoutPage = () => {
 
               <div className="block">
                 <h3 className="block__title">Shipping information</h3>
-                <form className="form">
+                <form className="form" onSubmit={handleSubmit(onSubmit)}>
                   <div className="form__input-row form__input-row--two">
                     <div className="form__col">
                       <input
                         className="form__input form__input--sm"
                         type="text"
                         placeholder="Email"
+                        {...register("email")}
                       />
+                      {errors.email && <span>{errors.email.message}</span>}
                     </div>
 
                     <div className="form__col">
@@ -53,7 +79,9 @@ const CheckoutPage = () => {
                         className="form__input form__input--sm"
                         type="text"
                         placeholder="Address"
+                        {...register("address")}
                       />
+                      {errors.address && <span>{errors.address.address}</span>}
                     </div>
                   </div>
 
@@ -63,7 +91,9 @@ const CheckoutPage = () => {
                         className="form__input form__input--sm"
                         type="text"
                         placeholder="First name"
+                        {...register("firstName")}
                       />
+                      {errors.firstName && <span>{errors.firstName.message}</span>}
                     </div>
 
                     <div className="form__col">
@@ -71,7 +101,9 @@ const CheckoutPage = () => {
                         className="form__input form__input--sm"
                         type="text"
                         placeholder="City"
+                        {...register("city")}
                       />
+                      {errors.city && <span>{errors.city.message}</span>}
                     </div>
                   </div>
 
@@ -81,15 +113,19 @@ const CheckoutPage = () => {
                         className="form__input form__input--sm"
                         type="text"
                         placeholder="Last name"
+                      {...register("lastName")}
                       />
+                      {errors.lastName && <span>{errors.lastName.message}</span>}
                     </div>
 
                     <div className="form__col">
                       <input
                         className="form__input form__input--sm"
-                        type="text"
+                        type="number"
                         placeholder="Postal code / ZIP"
+                        {...register("postal")}
                       />
+                      {errors.postal && <span>{errors.postal.message}</span>}
                     </div>
                   </div>
 
@@ -99,18 +135,21 @@ const CheckoutPage = () => {
                         className="form__input form__input--sm"
                         type="text"
                         placeholder="Phone number"
+                        {...register("phoneNumber")}
                       />
+                      {errors.phoneNumber && <span>{errors.phoneNumber.message}</span>}
                     </div>
 
-                    <div className="form__col">
-                      <div className="select-wrapper select-form">
-                        <select>
-                          <option>Country</option>
-                          <option value="Argentina">Argentina</option>
-                        </select>
-                      </div>
-                    </div>
+                    {/*<div className="form__col">*/}
+                    {/*  <div className="select-wrapper select-form">*/}
+                    {/*    <select>*/}
+                    {/*      <option>Country</option>*/}
+                    {/*      <option value="Argentina">Argentina</option>*/}
+                    {/*    </select>*/}
+                    {/*  </div>*/}
+                    {/*</div>*/}
                   </div>
+                  <button type="submit" className="btn btn--rounded btn--green">Check</button>
                 </form>
               </div>
             </div>
@@ -118,49 +157,53 @@ const CheckoutPage = () => {
             <div className="checkout__col-4">
               <div className="block">
                 <h3 className="block__title">Payment method</h3>
+                <p className="block__title">We only support ErcasPay</p>
                 <ul className="round-options round-options--three">
+                  {/*<li className="round-item">*/}
+                  {/*  <img src="/images/logos/paypal.png" alt="Paypal" />*/}
+                  {/*</li>*/}
+                  {/*<li className="round-item">*/}
+                  {/*  <img src="/images/logos/visa.png" alt="Paypal" />*/}
+                  {/*</li>*/}
+                  {/*<li className="round-item">*/}
+                  {/*  <img src="/images/logos/mastercard.png" alt="Paypal" />*/}
+                  {/*</li>*/}
+                  {/*<li className="round-item">*/}
+                  {/*  <img src="/images/logos/maestro.png" alt="Paypal" />*/}
+                  {/*</li>*/}
+                  {/*<li className="round-item">*/}
+                  {/*  <img src="/images/logos/discover.png" alt="Paypal" />*/}
+                  {/*</li>*/}
+                  {/*<li className="round-item">*/}
+                  {/*  <img src="/images/logos/ideal-logo.svg" alt="Paypal" />*/}
+                  {/*</li>*/}
                   <li className="round-item">
-                    <img src="/images/logos/paypal.png" alt="Paypal" />
-                  </li>
-                  <li className="round-item">
-                    <img src="/images/logos/visa.png" alt="Paypal" />
-                  </li>
-                  <li className="round-item">
-                    <img src="/images/logos/mastercard.png" alt="Paypal" />
-                  </li>
-                  <li className="round-item">
-                    <img src="/images/logos/maestro.png" alt="Paypal" />
-                  </li>
-                  <li className="round-item">
-                    <img src="/images/logos/discover.png" alt="Paypal" />
-                  </li>
-                  <li className="round-item">
-                    <img src="/images/logos/ideal-logo.svg" alt="Paypal" />
+                    <img src="/images/logos/ercas-logo-black.png" alt="ErcasPay" />
                   </li>
                 </ul>
               </div>
 
-              <div className="block">
-                <h3 className="block__title">Delivery method</h3>
-                <ul className="round-options round-options--two">
-                  <li className="round-item round-item--bg">
-                    <img src="/images/logos/inpost.svg" alt="Paypal" />
-                    <p>$20.00</p>
-                  </li>
-                  <li className="round-item round-item--bg">
-                    <img src="/images/logos/dpd.svg" alt="Paypal" />
-                    <p>$12.00</p>
-                  </li>
-                  <li className="round-item round-item--bg">
-                    <img src="/images/logos/dhl.svg" alt="Paypal" />
-                    <p>$15.00</p>
-                  </li>
-                  <li className="round-item round-item--bg">
-                    <img src="/images/logos/maestro.png" alt="Paypal" />
-                    <p>$10.00</p>
-                  </li>
-                </ul>
-              </div>
+              {/*<div className="block">*/}
+              {/*  <h3 className="block__title">Delivery method</h3>*/}
+              {/*  <ul className="round-options round-options--two">*/}
+              {/*    <li className="round-item round-item--bg">*/}
+              {/*      <img src="/images/logos/inpost.svg" alt="Paypal" />*/}
+              {/*      <p>$20.00</p>*/}
+              {/*    </li>*/}
+              {/*    <li className="round-item round-item--bg">*/}
+              {/*      <img src="/images/logos/dpd.svg" alt="Paypal" />*/}
+              {/*      <p>$12.00</p>*/}
+              {/*    </li>*/}
+              {/*    <li className="round-item round-item--bg">*/}
+              {/*      <img src="/images/logos/dhl.svg" alt="Paypal" />*/}
+              {/*      <p>$15.00</p>*/}
+              {/*    </li>*/}
+              {/*    <li className="round-item round-item--bg">*/}
+              {/*      <img src="/images/logos/maestro.png" alt="Paypal" />*/}
+              {/*      <p>$10.00</p>*/}
+              {/*    </li>*/}
+              {/*  </ul>*/}
+              {/*</div>*/}
             </div>
 
             <div className="checkout__col-2">
@@ -184,7 +227,7 @@ const CheckoutPage = () => {
               <button type="button" className="btn btn--rounded btn--border">
                 Continue shopping
               </button>
-              <button type="button" className="btn btn--rounded btn--yellow">
+              <button type="submit" className="btn btn--rounded btn--yellow">
                 Proceed to payment
               </button>
             </div>
