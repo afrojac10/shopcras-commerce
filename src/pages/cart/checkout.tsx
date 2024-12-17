@@ -13,7 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 const SignUpSchema = z.object({
   email: z.string().email(),
   phoneNumber: z.string().max(12),
-  postal: z.number(),
+  postal: z.string(),
   city: z.string(),
   firstName: z.string(),
   lastName: z.string(),
@@ -81,7 +81,7 @@ const CheckoutPage = () => {
                         placeholder="Address"
                         {...register("address")}
                       />
-                      {errors.address && <span>{errors.address.address}</span>}
+                      {errors.address && <span>{errors.address.message}</span>}
                     </div>
                   </div>
 
